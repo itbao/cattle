@@ -9,12 +9,13 @@ import json
 import yaml
 
 
-
 def get_now_stock(stock_dict):
     stock_series = Series(stock_dict)
     index_list = list(stock_series.index)
-    open_list = Series({ index:open["open_interest"] for index,open in stock_dict.items()})
-    tag_list = Series({ index:open["name"] for index,open in stock_dict.items()})
+    open_list = Series({index: open["open_interest"]
+                        for index, open in stock_dict.items()})
+    tag_list = Series({index: open["name"]
+                       for index, open in stock_dict.items()})
 
     data_df = ts.get_realtime_quotes(index_list).set_index("code")
     data_df["tag"] = tag_list
@@ -30,8 +31,7 @@ def get_now_stock(stock_dict):
 
     data_df.index = tag_list
 
-
-    stock_all = data_df[['p_change','change']]
+    stock_all = data_df[['p_change', 'change']]
     print stock_all
 
     change_all = data_df["change"].astype(np.float64).sum()
@@ -43,7 +43,4 @@ if __name__ == "__main__":
     stock_file = file("cc.yaml")
     stock_dict = yaml.load(stock_file)
 
-
-
     cc_result = get_now_stock(stock_dict)
-
